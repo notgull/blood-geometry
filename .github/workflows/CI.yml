@@ -1,0 +1,46 @@
+# CI Pipeline for Github Workflows
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '0 2 * * *'
+
+env:
+  RUSTFLAGS: -D warnings
+  RUST_BACKTRACE: 1
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust: [nightly, beta, stable]
+    steps:
+     - uses: actions/checkout@v3
+     - name: Install Rust
+       run: rustup update ${{ matrix.rust }} && rustup default ${{ matrix.rust }}
+     - run: cargo build --all --all-features --all-targets
+     - run: cargo test
+     - run: cargo check -Z features=dev_dep
+       if: startsWith(matrix.rust, 'nightly')
+  
+  clippy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Rust
+        run: rustup update stable
+      - cargo clippy --all-features --all-targets
+
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Rust
+        run: rustup update stable
+      - run: cargo fmt --all --check

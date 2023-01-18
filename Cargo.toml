@@ -1,0 +1,19 @@
+[package]
+name = "blood-geometry"
+version = "0.1.0"
+edition = "2018"
+
+[features]
+default = ["alloc"]
+alloc = []
+
+[dependencies]
+arbitrary = { version = "1.2.0", default-features = false, optional = true }
+bytemuck = { version = "1.12.3", default-features = false, features = ["derive"], optional = true }
+euclid = { version = "0.22.7", default-features = false, optional = true }
+kurbo = { version = "0.8.3", default-features = false, optional = true }
+lyon_geom = { version = "1.0.1", default-features = false, optional = true }
+mint = { version = "0.5.9", default-features = false, optional = true }
+num-traits = { version = "0.2.15", default-features = false, features = ["libm"] }
+serde = { version = "1.0.147", default-features = false, features = ["derive"], optional = true }
+tracing = { version = "0.1.37", default-features = false }
